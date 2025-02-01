@@ -1,3 +1,10 @@
+/**
+ * The Competitor class represents a competitor with an ID, name, age, country,
+ * and an array of scores. It provides methods to calculate the overall score,
+ * determine the competitor's level (Beginner, Intermediate, Advanced), and
+ * retrieve full details.
+ */
+
 package org.portfolio.competitormanager.model;
 
 import java.util.Arrays;
@@ -9,6 +16,7 @@ public class Competitor {
 	private String country;
 	private int[] scores; 
 	
+	// Constructor to initialize a Competitor object.
 	public Competitor(int competitor_id, Name name, int age, String country, int[] scores) {
 		this.competitor_id = competitor_id;
 		this.name= name;
@@ -17,6 +25,7 @@ public class Competitor {
 		this.scores = scores;
 	}
 	
+	//getter and setter methods 
 	public int getCompetitorId() {
 		return competitor_id;
 	}
@@ -49,33 +58,52 @@ public class Competitor {
 		this.country = country;
 	}
 	
-	public String getLevel() {
-		double overallScore = getOverallScore();
-		
-		if(overallScore <=2.5) {
-			return "Beginner";
-		}else if (overallScore <=4.0) {
-			return "Intermediate";
-		}else {
-			return "Advance";
-		}
-	}
-
-	
 	public int[] getScores() {
 		return scores;
 	}
-	public double getOverallScore() {
-		if(scores.length ==0) return 0;
-		
-		Arrays.sort(scores);
-		int sum=0;
-		for(int i=1; i<scores.length-1;i++) {
-			sum+=scores[i];
-		}
-		return scores.length>2?(double)sum/(scores.length -2) : (double) sum / scores.length;
-	}
 	
+
+	// calculating the overall scores of the competitors.
+	public double getOverallScore() {
+	    if (scores.length == 0) return 0;
+	    
+
+	    if (scores.length <= 2) {
+	        return Double.parseDouble(String.format("%.2f", Arrays.stream(scores).sum() / (double) scores.length));
+	    }
+
+	    Arrays.sort(scores);
+	    
+	    int sum = 0;
+	    
+	    for (int i = 1; i < scores.length - 1; i++) {
+	        sum += scores[i];
+	    }
+	    
+	    return Double.parseDouble(String.format("%.2f", sum / (double) (scores.length - 2)));
+	}
+
+	//categorizing the competitor levels according to their overall scores.
+	public String getLevel() {
+	    double overallScore = getOverallScore();
+	    
+	    // Assuming the maximum score is 10
+	    double maxScore = 10.0;
+
+	    double percentage = (overallScore / maxScore) * 100;
+	    
+
+	    if (percentage <= 30) {
+	        return "Beginner";
+	    } else if (percentage <= 70) {
+	        return "Intermediate";
+	    } else {
+	        return "Advanced";
+	    }
+	}
+
+
+
 	public String getFullDetails() {
 		return "Competitor number " + competitor_id + ", Name " + name + ", country " + country + ". " + name + "aged " + age + " and has an overall score of " + getOverallScore();
 	}

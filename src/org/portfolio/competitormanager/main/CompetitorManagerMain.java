@@ -15,6 +15,8 @@ public class CompetitorManagerMain {
 		
 		Name name2 = new Name("Messi", "Lionel");
 		Competitor competitor2 = new Competitor(3, name2, 38, "Argentina", new int[] {2,5,4,6,8,7,4,5});
+		
+		
 		competitorDao.save(competitor1);
 		competitorDao.save(competitor2);
 		
