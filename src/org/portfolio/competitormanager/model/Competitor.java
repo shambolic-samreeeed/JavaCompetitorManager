@@ -1,18 +1,20 @@
 package org.portfolio.competitormanager.model;
 
+import java.util.Arrays;
+
 public class Competitor {
 	private int competitor_id;
 	private Name name;
 	private int age;
 	private String country;
-	private String level;
+	private int[] scores; 
 	
-	public Competitor(int competitor_id, Name name, int age, String country, String level) {
+	public Competitor(int competitor_id, Name name, int age, String country, int[] scores) {
 		this.competitor_id = competitor_id;
 		this.name= name;
 		this.age = age;
 		this.country = country;
-		this.level = level;
+		this.scores = scores;
 	}
 	
 	public int getCompetitorId() {
@@ -48,18 +50,35 @@ public class Competitor {
 	}
 	
 	public String getLevel() {
-		return level;
+		double overallScore = getOverallScore();
+		
+		if(overallScore <=2.5) {
+			return "Beginner";
+		}else if (overallScore <=4.0) {
+			return "Intermediate";
+		}else {
+			return "Advance";
+		}
 	}
+
 	
-	public void setLevel(String level) {
-		this.level = level;
+	public int[] getScores() {
+		return scores;
 	}
-	
-	public int getOverallScore() {
-		return 5;
+	public double getOverallScore() {
+		if(scores.length ==0) return 0;
+		
+		Arrays.sort(scores);
+		int sum=0;
+		for(int i=1; i<scores.length-1;i++) {
+			sum+=scores[i];
+		}
+		return scores.length>2?(double)sum/(scores.length -2) : (double) sum / scores.length;
 	}
 	
 	public String getFullDetails() {
-		return "Competitor number " + competitor_id + ", Name " + name + ", country " + country + ". " + name + "is a " + level + " aged " + age + " and has an overall score of " + getOverallScore();
+		return "Competitor number " + competitor_id + ", Name " + name + ", country " + country + ". " + name + "aged " + age + " and has an overall score of " + getOverallScore();
 	}
+	
+
 }
