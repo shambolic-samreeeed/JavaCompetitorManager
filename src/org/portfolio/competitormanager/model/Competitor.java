@@ -102,8 +102,6 @@ public class Competitor {
 	    }
 	}
 
-
-
 	public String getFullDetails() {
 		return "Competitor number " + competitor_id + ", Name " + name + ", country " + country + ". " + name + "aged " + age + " and has an overall score of " + getOverallScore();
 	}

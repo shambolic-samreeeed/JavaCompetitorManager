@@ -13,12 +13,31 @@ public class CompetitorManagerMain {
 		Name name1 = new Name("Samreed", "Maharjan");
 		Competitor competitor1 = new Competitor(2, name1, 19, "Nepal", new int[] {1,2,3,4,5});
 		
-		Name name2 = new Name("Messi", "Lionel");
-		Competitor competitor2 = new Competitor(3, name2, 38, "Argentina", new int[] {2,5,4,6,8,7,4,5});
 		
+		Name name3 = new Name("Pablo", "Gavi");
+		Competitor updatedCompetitor = new Competitor(5, name3, 38, "Canada", new int[] {3});
 		
-		competitorDao.save(competitor1);
-		competitorDao.save(competitor2);
+		try {
+			int result = competitorDao.update(updatedCompetitor, 4);
+			if(result>0) {
+				System.out.println("Competitor updated sucessfully.");
+			}else {
+				System.out.println("Failed");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			int deleteResult = competitorDao.remove(4);
+			if(deleteResult>0) {
+				System.out.println("Competitor deleted sucessfully.");
+			}else {
+				System.out.println("Deletion Failed.");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 		System.out.println(competitor1.getFullDetails());
 	}

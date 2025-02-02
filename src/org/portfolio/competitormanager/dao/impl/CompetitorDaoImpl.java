@@ -35,14 +35,33 @@ public class CompetitorDaoImpl implements CompetitorDao {
 
 	@Override
 	public int update(Competitor competitor, int competitor_id) throws SQLException, ClassNotFoundException {
-		// TODO Auto-generated method stub
-		return 0;
+		String updateSQL = "update competitors SET name=?, age=?, country=?, level=?, scores=?, average=? WHERE competitor_id=?";
+		
+		try(Connection conn = ConnectionToDB.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(updateSQL)){
+			
+			
+			stmt.setString(1, competitor.getName().getFullName());
+			stmt.setInt(2,  competitor.getAge());
+			stmt.setString(3, competitor.getCountry());
+			stmt.setString(4, competitor.getLevel());
+			stmt.setString(5, Arrays.stream(competitor.getScores()).mapToObj(String::valueOf).collect(Collectors.joining(",")));
+			stmt.setDouble(6,  competitor.getOverallScore());
+			stmt.setInt(7, competitor_id);
+			
+			return stmt.executeUpdate();
+		}
 	}
 
 	@Override
 	public int remove(int competitor_id) throws SQLException, ClassNotFoundException {
-		// TODO Auto-generated method stub
-		return 0;
+		String deleteSQL = "DELETE FROM Competitors WHERE competitor_id=?";
+		
+		try(Connection conn = ConnectionToDB.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(deleteSQL)){
+			stmt.setInt(1, competitor_id);
+			return stmt.executeUpdate();
+		}
 	}
 
 	@Override
