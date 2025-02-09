@@ -1,85 +1,39 @@
 package org.portfolio.competitormanager.dao.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.portfolio.competitormanager.connection.ConnectionToDB;
 import org.portfolio.competitormanager.dao.CompetitorDao;
 import org.portfolio.competitormanager.model.Competitor;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class CompetitorDaoImpl implements CompetitorDao {
 
 	@Override
 	public int save(Competitor competitor) throws SQLException, ClassNotFoundException {
-		String SQLQuery = "INSERT INTO Competitors (competitor_id, name, age,  country, level, scores, average) VALUES (?, ?, ?, ?, ?, ?, ?)";
-		
+		String saveQuery = "INSERT INTO Users (username, password, role) VALUES (?, ?, ?)";
 		try(Connection conn = ConnectionToDB.getConnection();
-				PreparedStatement stmt = conn.prepareStatement(SQLQuery)){
-			
-			stmt.setInt(1, competitor.getCompetitorId());
-			stmt.setString(2, competitor.getName().getFullName());
-			stmt.setInt(3,  competitor.getAge());
-			stmt.setString(4, competitor.getCountry());
-			stmt.setString(5, competitor.getLevel());
-			stmt.setString(6, Arrays.stream(competitor.getScores()).mapToObj(String::valueOf).collect(Collectors.joining(",")));
-			stmt.setDouble(7,  competitor.getOverallScore());
-			
-			return stmt.executeUpdate();
-		}
-		
-	}
-
-	@Override
-	public int update(Competitor competitor, int competitor_id) throws SQLException, ClassNotFoundException {
-		String updateSQL = "update competitors SET name=?, age=?, country=?, level=?, scores=?, average=? WHERE competitor_id=?";
-		
-		try(Connection conn = ConnectionToDB.getConnection();
-				PreparedStatement stmt = conn.prepareStatement(updateSQL)){
-			
-			
-			stmt.setString(1, competitor.getName().getFullName());
-			stmt.setInt(2,  competitor.getAge());
-			stmt.setString(3, competitor.getCountry());
-			stmt.setString(4, competitor.getLevel());
-			stmt.setString(5, Arrays.stream(competitor.getScores()).mapToObj(String::valueOf).collect(Collectors.joining(",")));
-			stmt.setDouble(6,  competitor.getOverallScore());
-			stmt.setInt(7, competitor_id);
-			
+		PreparedStatement stmt = conn.prepareStatement(saveQuery)){
+			stmt.setString(1, competitor.getUsername());
+			stmt.setString(2, competitor.getPassword());
+			stmt.setString(3, competitor.getRole());
 			return stmt.executeUpdate();
 		}
 	}
 
 	@Override
-	public int remove(int competitor_id) throws SQLException, ClassNotFoundException {
-		String deleteSQL = "DELETE FROM Competitors WHERE competitor_id=?";
-		
-		try(Connection conn = ConnectionToDB.getConnection();
-				PreparedStatement stmt = conn.prepareStatement(deleteSQL)){
-			stmt.setInt(1, competitor_id);
-			return stmt.executeUpdate();
+	public Competitor findByUsername(String username) throws SQLException, ClassNotFoundException {
+		String selectQuery = "SELECT * FROM Users WHERE username = ?";
+		try(Connection connection = ConnectionToDB.getConnection();
+		PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+			preparedStatement.setString(1, username);
+			ResultSet resultset = preparedStatement.executeQuery();
+			if(resultset.next()){
+				return new Competitor(resultset.getInt("user_id"), resultset.getString("username"), resultset.getString("password"), resultset.getString("role"));
+			}
 		}
-	}
-
-	@Override
-	public Competitor findOne(int competitor_id) throws SQLException, ClassNotFoundException {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public List<Competitor> findAll() throws SQLException, ClassNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Competitor> search(String SQLQuery) throws SQLException, ClassNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
