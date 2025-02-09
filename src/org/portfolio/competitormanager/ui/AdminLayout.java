@@ -112,9 +112,9 @@ public class AdminLayout extends JFrame {
 
         add(formPanel, BorderLayout.WEST);
 
-        // 🔹 BUTTON PANEL (Properly Positioned)
+        // 🔹 BUTTON PANEL
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10)); // Better button spacing
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
         addButton = new JButton("Add");
         updateButton = new JButton("Update");
@@ -125,17 +125,15 @@ public class AdminLayout extends JFrame {
         buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // 🔹 TABLE PANEL (For Displaying Questions)
+        // 🔹 TABLE PANEL
         tableModel = new DefaultTableModel(new String[]{"ID", "Question", "Option 1", "Option 2", "Option 3", "Option 4", "Correct", "Difficulty"}, 0);
         questionTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(questionTable);
         scrollPane.setPreferredSize(new Dimension(500, 300));
         add(scrollPane, BorderLayout.CENTER);
 
-        // Load Questions from Database
         loadQuestions();
 
-        // Button Actions
         addButton.addActionListener(this::handleAdd);
         updateButton.addActionListener(this::handleUpdate);
         deleteButton.addActionListener(e1 -> {
@@ -146,29 +144,9 @@ public class AdminLayout extends JFrame {
             }
         });
 
-        // Table Selection Listener
-        questionTable.getSelectionModel().addListSelectionListener(e -> {
-            int selectedRow = questionTable.getSelectedRow();
-            if (selectedRow != -1) {
-                selectedQuestionId = (int) tableModel.getValueAt(selectedRow, 0);
-                questionTextField.setText(tableModel.getValueAt(selectedRow, 1).toString());
-                option1Field.setText(tableModel.getValueAt(selectedRow, 2).toString());
-                option2Field.setText(tableModel.getValueAt(selectedRow, 3).toString());
-                option3Field.setText(tableModel.getValueAt(selectedRow, 4).toString());
-                option4Field.setText(tableModel.getValueAt(selectedRow, 5).toString());
-                String correctOption = tableModel.getValueAt(selectedRow, 6).toString();
-                correctOption1.setSelected("1".equals(correctOption));
-                correctOption2.setSelected("2".equals(correctOption));
-                correctOption3.setSelected("3".equals(correctOption));
-                correctOption4.setSelected("4".equals(correctOption));
-                difficultyComboBox.setSelectedItem(tableModel.getValueAt(selectedRow, 7).toString());
-            }
-        });
-
         setVisible(true);
     }
 
-    // Load questions from database into JTable
     private void loadQuestions() {
         try {
             tableModel.setRowCount(0);
@@ -181,7 +159,9 @@ public class AdminLayout extends JFrame {
         }
     }
 
-    // Add a new question
+
+
+// Add a new question
     private void handleAdd(ActionEvent e) {
         try {
             int correctOption = 0;

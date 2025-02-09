@@ -15,7 +15,7 @@ public class ResultDaoImpl implements ResultDao {
 
     @Override
     public int save(Result result) throws SQLException, ClassNotFoundException {
-        String SQLQuery = "INSERT INTO results (user_id, username, score, difficulty) VALUES (?,?,?)";
+        String SQLQuery = "INSERT INTO results (user_id, username, score, difficulty) VALUES (?,?,?,?)";
         try(Connection connection = ConnectionToDB.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery)) {
             preparedStatement.setInt(1, result.getUserId());

@@ -3,7 +3,6 @@ package org.portfolio.competitormanager.ui;
 import org.portfolio.competitormanager.dao.CompetitorDao;
 import org.portfolio.competitormanager.dao.impl.CompetitorDaoImpl;
 import org.portfolio.competitormanager.model.Competitor;
-import org.portfolio.competitormanager.ui.RegisterUser;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -28,28 +27,23 @@ public class LoginUser extends JFrame {
         frame.setVisible(true);
 
         loginButton.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 handleLogin();
             }
-
         });
 
         registerButton.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 openRegistrationWindow();
-
             }
         });
     }
 
     private void handleLogin() {
         String username = usernameTextField.getText();
-        String password = passwordTextField.getText();
+        String password = new String(passwordTextField.getPassword()); // Fixed password retrieval
 
         try {
             CompetitorDao competitorDao = new CompetitorDaoImpl();
@@ -58,29 +52,28 @@ public class LoginUser extends JFrame {
             if (competitor != null && competitor.getPassword().equals(password)) {
                 JOptionPane.showMessageDialog(frame, "Login Successful");
 
-                if (competitor.getRole().equals("admin")) {
-                    JOptionPane.showMessageDialog(frame, "You have successfully logged in as admin");
-                    dispose();
+                frame.dispose(); // Close login window
+
+                if ("admin".equals(competitor.getRole())) {
+                    JOptionPane.showMessageDialog(null, "You have successfully logged in as admin");
                     AdminLayout adminLayout = new AdminLayout(username);
                     adminLayout.setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(frame, "You have successfully logged in as user");
+                    JOptionPane.showMessageDialog(null, "You have successfully logged in as user");
+                    CompetitorLayout competitorLayout = new CompetitorLayout(username);
+                    competitorLayout.setVisible(true);
                 }
-
             } else {
-                JOptionPane.showMessageDialog(frame, "Invalid Username or Password");
+                JOptionPane.showMessageDialog(frame, "Invalid Username or Password", "Login Failed", JOptionPane.ERROR_MESSAGE);
             }
-
         } catch (SQLException | ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(frame, "database error" + ex.getMessage());
+            JOptionPane.showMessageDialog(frame, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void openRegistrationWindow(){
-        dispose();
+    private void openRegistrationWindow() {
+        frame.dispose();
         RegisterUser registerUser = new RegisterUser();
         registerUser.setVisible(true);
-
     }
-
 }

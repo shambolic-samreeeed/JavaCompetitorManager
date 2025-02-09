@@ -69,7 +69,7 @@ public class QuestionDaoImpl implements QuestionDao {
             while(resultSet.next()){
                 questions.add(new Questions(
                         resultSet.getInt("question_id"),
-                        resultSet.getString("question_id"),
+                        resultSet.getString("question_text"),
                         resultSet.getString("option1"),
                         resultSet.getString("option2"),
                         resultSet.getString("option3"),
