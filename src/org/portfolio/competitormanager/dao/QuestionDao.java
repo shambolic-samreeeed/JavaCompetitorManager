@@ -16,4 +16,8 @@ public interface QuestionDao {
     List<Questions> findAll() throws SQLException, ClassNotFoundException;
 
     List<Questions> findByDifficulty(String difficulty) throws SQLException, ClassNotFoundException;
+
+    int count() throws SQLException, ClassNotFoundException;
+
+    void resetAutoIncrement() throws SQLException, ClassNotFoundException;
 }

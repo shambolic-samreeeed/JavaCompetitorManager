@@ -105,4 +105,29 @@ public class QuestionDaoImpl implements QuestionDao {
         }
         return questions;
     }
+
+    @Override
+    public int count() throws SQLException, ClassNotFoundException {
+        String countSQL = "SELECT COUNT(*) FROM Questions";
+        try (Connection connection = ConnectionToDB.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(countSQL);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public void resetAutoIncrement() throws SQLException, ClassNotFoundException {
+        String resetSQL = "ALTER TABLE Questions AUTO_INCREMENT = 1";
+        try (Connection connection = ConnectionToDB.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(resetSQL)) {
+            preparedStatement.executeUpdate();
+        }
+    }
+
+
 }

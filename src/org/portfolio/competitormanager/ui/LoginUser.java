@@ -3,19 +3,19 @@ package org.portfolio.competitormanager.ui;
 import org.portfolio.competitormanager.dao.CompetitorDao;
 import org.portfolio.competitormanager.dao.impl.CompetitorDaoImpl;
 import org.portfolio.competitormanager.model.Competitor;
+import org.portfolio.competitormanager.ui.RegisterUser;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
-public class LoginUser {
+public class LoginUser extends JFrame {
     private JPanel contentPane;
     private JTextField usernameTextField;
-    private JTextField passwordTextField;
+    private JPasswordField passwordTextField;
     private JButton registerButton;
     private JButton loginButton;
-
     private JFrame frame;
 
     public LoginUser() {
@@ -40,8 +40,9 @@ public class LoginUser {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Registration wnidow");
-//                openRegistrationWindow();
+
+                openRegistrationWindow();
+
             }
         });
     }
@@ -59,6 +60,9 @@ public class LoginUser {
 
                 if (competitor.getRole().equals("admin")) {
                     JOptionPane.showMessageDialog(frame, "You have successfully logged in as admin");
+                    dispose();
+                    AdminLayout adminLayout = new AdminLayout(username);
+                    adminLayout.setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(frame, "You have successfully logged in as user");
                 }
@@ -71,4 +75,12 @@ public class LoginUser {
             JOptionPane.showMessageDialog(frame, "database error" + ex.getMessage());
         }
     }
+
+    private void openRegistrationWindow(){
+        dispose();
+        RegisterUser registerUser = new RegisterUser();
+        registerUser.setVisible(true);
+
+    }
+
 }
