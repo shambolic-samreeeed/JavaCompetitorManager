@@ -1,9 +1,12 @@
 package org.portfolio.competitormanager.ui;
 
+import org.portfolio.competitormanager.dao.CompetitorDao;
 import org.portfolio.competitormanager.dao.QuestionDao;
 import org.portfolio.competitormanager.dao.ResultDao;
+import org.portfolio.competitormanager.dao.impl.CompetitorDaoImpl;
 import org.portfolio.competitormanager.dao.impl.QuestionDaoImpl;
 import org.portfolio.competitormanager.dao.impl.ResultDaoImpl;
+import org.portfolio.competitormanager.model.Competitor;
 import org.portfolio.competitormanager.model.Questions;
 import org.portfolio.competitormanager.model.Result;
 
@@ -24,10 +27,12 @@ public class CompetitorLayout extends JFrame {
 
     private QuestionDao questionDao;
     private ResultDao resultDao;
+    private CompetitorDao competitorDao;
     private List<Questions> questions;
     private int currentQuestionIndex = 0;
     private int score = 0;
     private String username;
+    private int userId; // Add this field to store the user_id
 
     public CompetitorLayout(String username) {
         this.username = username;
@@ -35,6 +40,23 @@ public class CompetitorLayout extends JFrame {
         // Initialize DAOs
         questionDao = new QuestionDaoImpl();
         resultDao = new ResultDaoImpl();
+        competitorDao = new CompetitorDaoImpl();
+
+        // Retrieve the user_id from the database
+        try {
+            Competitor competitor = competitorDao.findByUsername(username);
+            if (competitor != null) {
+                this.userId = competitor.getUserId(); // Store the user_id
+            } else {
+                JOptionPane.showMessageDialog(this, "User not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                dispose();
+                return;
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(this, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            dispose();
+            return;
+        }
 
         // UI Setup
         setTitle("User Dashboard - " + username);
@@ -155,7 +177,7 @@ public class CompetitorLayout extends JFrame {
     private void endQuiz() {
         String difficulty = (String) difficultyComboBox.getSelectedItem();
         try {
-            Result result = new Result(0, 0, username, score, difficulty);
+            Result result = new Result(0, userId, username, score, difficulty); // Use the stored user_id
             resultDao.save(result);
 
             String summary = "Quiz Summary:\n" +

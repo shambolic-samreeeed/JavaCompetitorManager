@@ -5,6 +5,7 @@ import org.portfolio.competitormanager.dao.impl.QuestionDaoImpl;
 import org.portfolio.competitormanager.model.Questions;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -30,7 +31,7 @@ public class AdminLayout extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
-        // 🔹 HEADER PANEL (Admin Welcome Label)
+        // 🔹 HEADER PANEL
         JPanel headerPanel = new JPanel();
         JLabel welcomeLabel = new JLabel("Welcome, " + adminName + " - Admin Panel");
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
@@ -113,13 +114,10 @@ public class AdminLayout extends JFrame {
         add(formPanel, BorderLayout.WEST);
 
         // 🔹 BUTTON PANEL
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         addButton = new JButton("Add");
         updateButton = new JButton("Update");
         deleteButton = new JButton("Delete");
-
         buttonPanel.add(addButton);
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
@@ -134,13 +132,19 @@ public class AdminLayout extends JFrame {
 
         loadQuestions();
 
+        // 🔹 Handle Row Selection
+        questionTable.getSelectionModel().addListSelectionListener(this::handleRowSelection);
+
+        // 🔹 Button Actions
         addButton.addActionListener(this::handleAdd);
         updateButton.addActionListener(this::handleUpdate);
-        deleteButton.addActionListener(e1 -> {
+        deleteButton.addActionListener(e -> {
             try {
-                handleDelete(e1);
-            } catch (SQLException | ClassNotFoundException ex) {
-                ex.printStackTrace();
+                handleDelete(e);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
             }
         });
 
@@ -159,6 +163,34 @@ public class AdminLayout extends JFrame {
         }
     }
 
+    private void handleRowSelection(ListSelectionEvent event) {
+        if (!event.getValueIsAdjusting() && questionTable.getSelectedRow() != -1) {
+            populateFieldsFromTable();
+        }
+    }
+
+    private void populateFieldsFromTable() {
+        int selectedRow = questionTable.getSelectedRow();
+        if (selectedRow == -1) return;
+
+        selectedQuestionId = (int) tableModel.getValueAt(selectedRow, 0);
+        questionTextField.setText(tableModel.getValueAt(selectedRow, 1).toString());
+        option1Field.setText(tableModel.getValueAt(selectedRow, 2).toString());
+        option2Field.setText(tableModel.getValueAt(selectedRow, 3).toString());
+        option3Field.setText(tableModel.getValueAt(selectedRow, 4).toString());
+        option4Field.setText(tableModel.getValueAt(selectedRow, 5).toString());
+
+        int correctOption = (int) tableModel.getValueAt(selectedRow, 6);
+        correctOptionGroup.clearSelection();
+        switch (correctOption) {
+            case 1 -> correctOption1.setSelected(true);
+            case 2 -> correctOption2.setSelected(true);
+            case 3 -> correctOption3.setSelected(true);
+            case 4 -> correctOption4.setSelected(true);
+        }
+
+        difficultyComboBox.setSelectedItem(tableModel.getValueAt(selectedRow, 7).toString());
+    }
 
 
 // Add a new question
