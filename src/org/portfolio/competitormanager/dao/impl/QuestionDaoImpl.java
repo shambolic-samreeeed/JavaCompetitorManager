@@ -13,6 +13,10 @@ import java.util.List;
 
 public class QuestionDaoImpl implements QuestionDao {
 
+    /**
+     * Saves a new question to the database
+     * @param questions the question object to be stored in the database.
+     */
     @Override
     public int save(Questions questions) throws SQLException, ClassNotFoundException {
         String SQLQuery = "INSERT INTO Questions (question_text, option1, option2, option3, option4, correct_option, difficulty) VALUES (?,?,?,?,?,?,?)";
@@ -29,8 +33,11 @@ public class QuestionDaoImpl implements QuestionDao {
         }
     }
 
-
-
+    /**
+     * Updates a question in the database
+     * @param question the updated question object
+     * @param question_id the id if the question that is to be updated.
+     */
     @Override
     public int update(Questions question, int question_id) throws SQLException, ClassNotFoundException {
         String updateSQL = "UPDATE Questions SET question_text=?, option1=?, option2=?, option3=?, option4=?, correct_option=?, difficulty=? WHERE question_id=?";
@@ -48,6 +55,10 @@ public class QuestionDaoImpl implements QuestionDao {
         }
     }
 
+    /**
+     * deletes a question from the database
+     * @param question_id the id of the question that is to be deleted
+     */
     @Override
     public int delete(int question_id) throws SQLException, ClassNotFoundException {
         String deleteSQL = "DELETE FROM Questions WHERE question_id=?";
@@ -59,6 +70,10 @@ public class QuestionDaoImpl implements QuestionDao {
 
     }
 
+    /**
+     * retrieves all the questions from the database
+     * @return list of all the questions
+     */
     @Override
     public List<Questions> findAll() throws SQLException, ClassNotFoundException {
         String selectSQL = "SELECT * FROM Questions";
@@ -82,16 +97,21 @@ public class QuestionDaoImpl implements QuestionDao {
         return questions;
     }
 
+    /**
+     * retrieves questions based on the difficulty selected.
+     * @param difficulty the difficulty of the questions.
+     * @return a list of qns with the difficulty.
+     */
     @Override
     public List<Questions> findByDifficulty(String difficulty) throws SQLException, ClassNotFoundException {
         String selectSQL = "SELECT * FROM Questions WHERE difficulty=?";
         List<Questions> questions = new ArrayList<>();
         try(Connection connection = ConnectionToDB.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
             preparedStatement.setString(1, difficulty);
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
-                questions.add(new Questions(
+                while(resultSet.next()){
+                    questions.add(new Questions(
                         resultSet.getInt("question_id"),
                         resultSet.getString("question_text"),
                         resultSet.getString("option1"),
@@ -105,29 +125,4 @@ public class QuestionDaoImpl implements QuestionDao {
         }
         return questions;
     }
-
-    @Override
-    public int count() throws SQLException, ClassNotFoundException {
-        String countSQL = "SELECT COUNT(*) FROM Questions";
-        try (Connection connection = ConnectionToDB.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(countSQL);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-
-            if (resultSet.next()) {
-                return resultSet.getInt(1);
-            }
-        }
-        return 0;
-    }
-
-    @Override
-    public void resetAutoIncrement() throws SQLException, ClassNotFoundException {
-        String resetSQL = "ALTER TABLE Questions AUTO_INCREMENT = 1";
-        try (Connection connection = ConnectionToDB.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(resetSQL)) {
-            preparedStatement.executeUpdate();
-        }
-    }
-
-
 }

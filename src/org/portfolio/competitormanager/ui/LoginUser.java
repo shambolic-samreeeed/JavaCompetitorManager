@@ -60,8 +60,8 @@ public class LoginUser extends JFrame {
                     adminLayout.setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "You have successfully logged in as user");
-                    CompetitorLayout competitorLayout = new CompetitorLayout(username);
-                    competitorLayout.setVisible(true);
+                    HomePage homePage = new HomePage(username);
+                    homePage.setVisible(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(frame, "Invalid Username or Password", "Login Failed", JOptionPane.ERROR_MESSAGE);

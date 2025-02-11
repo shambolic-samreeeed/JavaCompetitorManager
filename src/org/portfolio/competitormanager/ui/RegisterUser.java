@@ -47,7 +47,7 @@ public class RegisterUser extends JFrame {
     private void handleRegister() {
         String username = usernameTextField.getText();
         String password = passwordTextField.getText();
-        String role = competitorRadioButton.isSelected() ? "competitor" : "admin";
+        String role = competitorRadioButton.isSelected() ? "user" : "admin";
 
         if (username.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill all the fields");

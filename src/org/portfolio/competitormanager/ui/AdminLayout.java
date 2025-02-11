@@ -18,138 +18,148 @@ public class AdminLayout extends JFrame {
     private JButton addButton, updateButton, deleteButton;
     private JTable questionTable;
     private DefaultTableModel tableModel;
+
     private QuestionDao questionDao;
     private int selectedQuestionId = -1;
     private ButtonGroup correctOptionGroup;
     private JRadioButton correctOption1, correctOption2, correctOption3, correctOption4;
+    private JTable table1;
 
-    public AdminLayout(String adminName) {
-        questionDao = new QuestionDaoImpl();
-        setTitle("Admin Panel - Question Management");
-        setSize(1000, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout(10, 10));
 
-        // 🔹 HEADER PANEL
-        JPanel headerPanel = new JPanel();
-        JLabel welcomeLabel = new JLabel("Welcome, " + adminName + " - Admin Panel");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        headerPanel.add(welcomeLabel);
-        add(headerPanel, BorderLayout.NORTH);
 
-        // 🔹 FORM PANEL
-        JPanel formPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        public AdminLayout(String adminName) {
+            questionDao = new QuestionDaoImpl();
+            setTitle("Admin Panel - Question Management");
+            setSize(1000, 600);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setLocationRelativeTo(null);
+            setLayout(new BorderLayout(10, 10));
 
-        formPanel.add(new JLabel("Question:"), gbc);
-        gbc.gridx = 1;
-        questionTextField = new JTextField(25);
-        formPanel.add(questionTextField, gbc);
+            // 🔹 HEADER PANEL
+            JPanel headerPanel = new JPanel();
+            JLabel welcomeLabel = new JLabel(adminName + ", Admin panel");
+            welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
+            headerPanel.add(welcomeLabel);
+            add(headerPanel, BorderLayout.NORTH);
 
-        gbc.gridx = 0;
-        gbc.gridy++;
-        formPanel.add(new JLabel("Option 1:"), gbc);
-        gbc.gridx = 1;
-        option1Field = new JTextField(20);
-        formPanel.add(option1Field, gbc);
+            // 🔹 FORM PANEL
+            JPanel formPanel = new JPanel(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(5, 5, 5, 5);
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.gridx = 0;
+            gbc.gridy = 0;
 
-        gbc.gridx = 0;
-        gbc.gridy++;
-        formPanel.add(new JLabel("Option 2:"), gbc);
-        gbc.gridx = 1;
-        option2Field = new JTextField(20);
-        formPanel.add(option2Field, gbc);
+            formPanel.add(new JLabel("Question:"), gbc);
+            gbc.gridx = 1;
+            questionTextField = new JTextField(25);
+            formPanel.add(questionTextField, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy++;
-        formPanel.add(new JLabel("Option 3:"), gbc);
-        gbc.gridx = 1;
-        option3Field = new JTextField(20);
-        formPanel.add(option3Field, gbc);
+            gbc.gridx = 0;
+            gbc.gridy++;
+            formPanel.add(new JLabel("Option 1:"), gbc);
+            gbc.gridx = 1;
+            option1Field = new JTextField(20);
+            formPanel.add(option1Field, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy++;
-        formPanel.add(new JLabel("Option 4:"), gbc);
-        gbc.gridx = 1;
-        option4Field = new JTextField(20);
-        formPanel.add(option4Field, gbc);
+            gbc.gridx = 0;
+            gbc.gridy++;
+            formPanel.add(new JLabel("Option 2:"), gbc);
+            gbc.gridx = 1;
+            option2Field = new JTextField(20);
+            formPanel.add(option2Field, gbc);
 
-        // Correct Option Radio Buttons
-        gbc.gridx = 0;
-        gbc.gridy++;
-        formPanel.add(new JLabel("Correct Option:"), gbc);
+            gbc.gridx = 0;
+            gbc.gridy++;
+            formPanel.add(new JLabel("Option 3:"), gbc);
+            gbc.gridx = 1;
+            option3Field = new JTextField(20);
+            formPanel.add(option3Field, gbc);
 
-        JPanel correctOptionPanel = new JPanel();
-        correctOption1 = new JRadioButton("1");
-        correctOption2 = new JRadioButton("2");
-        correctOption3 = new JRadioButton("3");
-        correctOption4 = new JRadioButton("4");
+            gbc.gridx = 0;
+            gbc.gridy++;
+            formPanel.add(new JLabel("Option 4:"), gbc);
+            gbc.gridx = 1;
+            option4Field = new JTextField(20);
+            formPanel.add(option4Field, gbc);
 
-        correctOptionGroup = new ButtonGroup();
-        correctOptionGroup.add(correctOption1);
-        correctOptionGroup.add(correctOption2);
-        correctOptionGroup.add(correctOption3);
-        correctOptionGroup.add(correctOption4);
+            // Correct Option Radio Buttons
+            gbc.gridx = 0;
+            gbc.gridy++;
+            formPanel.add(new JLabel("Correct Option:"), gbc);
 
-        correctOptionPanel.add(correctOption1);
-        correctOptionPanel.add(correctOption2);
-        correctOptionPanel.add(correctOption3);
-        correctOptionPanel.add(correctOption4);
+            JPanel correctOptionPanel = new JPanel();
+            correctOption1 = new JRadioButton("1");
+            correctOption2 = new JRadioButton("2");
+            correctOption3 = new JRadioButton("3");
+            correctOption4 = new JRadioButton("4");
 
-        gbc.gridx = 1;
-        formPanel.add(correctOptionPanel, gbc);
+            correctOptionGroup = new ButtonGroup();
+            correctOptionGroup.add(correctOption1);
+            correctOptionGroup.add(correctOption2);
+            correctOptionGroup.add(correctOption3);
+            correctOptionGroup.add(correctOption4);
 
-        gbc.gridx = 0;
-        gbc.gridy++;
-        formPanel.add(new JLabel("Difficulty:"), gbc);
-        gbc.gridx = 1;
-        difficultyComboBox = new JComboBox<>(new String[]{"Beginner", "Intermediate", "Advanced"});
-        formPanel.add(difficultyComboBox, gbc);
+            correctOptionPanel.add(correctOption1);
+            correctOptionPanel.add(correctOption2);
+            correctOptionPanel.add(correctOption3);
+            correctOptionPanel.add(correctOption4);
 
-        add(formPanel, BorderLayout.WEST);
+            gbc.gridx = 1;
+            formPanel.add(correctOptionPanel, gbc);
 
-        // 🔹 BUTTON PANEL
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        addButton = new JButton("Add");
-        updateButton = new JButton("Update");
-        deleteButton = new JButton("Delete");
-        buttonPanel.add(addButton);
-        buttonPanel.add(updateButton);
-        buttonPanel.add(deleteButton);
-        add(buttonPanel, BorderLayout.SOUTH);
+            gbc.gridx = 0;
+            gbc.gridy++;
+            formPanel.add(new JLabel("Difficulty:"), gbc);
+            gbc.gridx = 1;
+            difficultyComboBox = new JComboBox<>(new String[]{"Beginner", "Intermediate", "Advanced"});
+            formPanel.add(difficultyComboBox, gbc);
 
-        // 🔹 TABLE PANEL
-        tableModel = new DefaultTableModel(new String[]{"ID", "Question", "Option 1", "Option 2", "Option 3", "Option 4", "Correct", "Difficulty"}, 0);
-        questionTable = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(questionTable);
-        scrollPane.setPreferredSize(new Dimension(500, 300));
-        add(scrollPane, BorderLayout.CENTER);
+            add(formPanel, BorderLayout.WEST);
 
-        loadQuestions();
+            // 🔹 BUTTON PANEL
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+            addButton = new JButton("Add");
+            updateButton = new JButton("Update");
+            deleteButton = new JButton("Delete");
+            JButton clearButton = new JButton("Clear");
+            buttonPanel.add(addButton);
+            buttonPanel.add(updateButton);
+            buttonPanel.add(deleteButton);
+            buttonPanel.add(clearButton);
+            add(buttonPanel, BorderLayout.SOUTH);
 
-        // 🔹 Handle Row Selection
-        questionTable.getSelectionModel().addListSelectionListener(this::handleRowSelection);
+            // 🔹 TABLE PANEL
+            tableModel = new DefaultTableModel(new String[]{"ID", "Question", "Option 1", "Option 2", "Option 3", "Option 4", "Correct", "Difficulty"}, 0);
+            questionTable = new JTable(tableModel);
+            JScrollPane scrollPane = new JScrollPane(questionTable);
+            scrollPane.setPreferredSize(new Dimension(500, 300));
+            add(scrollPane, BorderLayout.CENTER);
 
-        // 🔹 Button Actions
-        addButton.addActionListener(this::handleAdd);
-        updateButton.addActionListener(this::handleUpdate);
-        deleteButton.addActionListener(e -> {
-            try {
-                handleDelete(e);
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            } catch (ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
+            loadQuestions();
 
-        setVisible(true);
-    }
+            // 🔹 Handle Row Selection
+            questionTable.getSelectionModel().addListSelectionListener(this::handleRowSelection);
+
+            // 🔹 Button Actions
+            addButton.addActionListener(this::handleAdd);
+            updateButton.addActionListener(this::handleUpdate);
+            deleteButton.addActionListener(e -> {
+                try {
+                    handleDelete(e);
+                } catch (SQLException | ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+            clearButton.addActionListener(e -> clearFields());
+
+            setVisible(true);
+        }
+
+        // Clear all input fields and reset radio buttons
+
+
+
 
     private void loadQuestions() {
         try {
@@ -193,18 +203,38 @@ public class AdminLayout extends JFrame {
     }
 
 
-// Add a new question
+    // Add a new question
+// Add a new question with validation
     private void handleAdd(ActionEvent e) {
         try {
+            // Validate fields
+            if (questionTextField.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Question text cannot be blank!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (option1Field.getText().trim().isEmpty() || option2Field.getText().trim().isEmpty() ||
+                    option3Field.getText().trim().isEmpty() || option4Field.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "All options must be filled!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (!correctOption1.isSelected() && !correctOption2.isSelected() &&
+                    !correctOption3.isSelected() && !correctOption4.isSelected()) {
+                JOptionPane.showMessageDialog(this, "Please select a correct option!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Determine the correct option
             int correctOption = 0;
             if (correctOption1.isSelected()) correctOption = 1;
             else if (correctOption2.isSelected()) correctOption = 2;
             else if (correctOption3.isSelected()) correctOption = 3;
             else if (correctOption4.isSelected()) correctOption = 4;
 
+            // Create the new question
             Questions newQuestion = new Questions(0, questionTextField.getText(), option1Field.getText(), option2Field.getText(),
                     option3Field.getText(), option4Field.getText(), correctOption, difficultyComboBox.getSelectedItem().toString());
 
+            // Save the question
             int result = questionDao.save(newQuestion);
             if (result > 0) {
                 JOptionPane.showMessageDialog(this, "Question Added Successfully!");
@@ -212,27 +242,46 @@ public class AdminLayout extends JFrame {
                 loadQuestions();
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error adding question: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error adding question: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    // Update an existing question
+    // Update an existing question with validation
     private void handleUpdate(ActionEvent e) {
         if (selectedQuestionId == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a question to update.");
+            JOptionPane.showMessageDialog(this, "Please select a question to update.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         try {
+            // Validate fields
+            if (questionTextField.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Question text cannot be blank!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (option1Field.getText().trim().isEmpty() || option2Field.getText().trim().isEmpty() ||
+                    option3Field.getText().trim().isEmpty() || option4Field.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "All options must be filled!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (!correctOption1.isSelected() && !correctOption2.isSelected() &&
+                    !correctOption3.isSelected() && !correctOption4.isSelected()) {
+                JOptionPane.showMessageDialog(this, "Please select a correct option!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Determine the correct option
             int correctOption = 0;
             if (correctOption1.isSelected()) correctOption = 1;
             else if (correctOption2.isSelected()) correctOption = 2;
             else if (correctOption3.isSelected()) correctOption = 3;
             else if (correctOption4.isSelected()) correctOption = 4;
 
+            // Create the updated question
             Questions updatedQuestion = new Questions(selectedQuestionId, questionTextField.getText(), option1Field.getText(), option2Field.getText(),
                     option3Field.getText(), option4Field.getText(), correctOption, difficultyComboBox.getSelectedItem().toString());
 
+            // Update the question
             int result = questionDao.update(updatedQuestion, selectedQuestionId);
             if (result > 0) {
                 JOptionPane.showMessageDialog(this, "Question Updated Successfully!");
@@ -240,7 +289,7 @@ public class AdminLayout extends JFrame {
                 loadQuestions();
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error updating question: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error updating question: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -254,11 +303,17 @@ public class AdminLayout extends JFrame {
         int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this question?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             questionDao.delete(selectedQuestionId);
+
+            // Clear selection before reloading
+            questionTable.clearSelection();
+            selectedQuestionId = -1;
+
             JOptionPane.showMessageDialog(this, "Question Deleted Successfully!");
             clearFields();
             loadQuestions();
         }
     }
+
 
     // Clear all input fields and reset radio buttons
     private void clearFields() {

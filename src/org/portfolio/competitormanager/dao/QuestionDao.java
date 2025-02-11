@@ -1,9 +1,13 @@
 package org.portfolio.competitormanager.dao;
 
 import org.portfolio.competitormanager.model.Questions;
-
 import java.sql.SQLException;
 import java.util.List;
+
+/**
+ * DAO interface to manage question in the database
+ * provides the methods for saving and retrieving question data
+ */
 
 public interface QuestionDao {
 
@@ -17,7 +21,4 @@ public interface QuestionDao {
 
     List<Questions> findByDifficulty(String difficulty) throws SQLException, ClassNotFoundException;
 
-    int count() throws SQLException, ClassNotFoundException;
-
-    void resetAutoIncrement() throws SQLException, ClassNotFoundException;
 }
