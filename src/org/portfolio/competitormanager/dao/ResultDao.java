@@ -17,7 +17,4 @@ public interface ResultDao {
 
     List<Result> findAll() throws SQLException, ClassNotFoundException;
 
-    List<String> getLeaderboard() throws SQLException, ClassNotFoundException;
-
-    int update(Result result) throws SQLException, ClassNotFoundException;
 }

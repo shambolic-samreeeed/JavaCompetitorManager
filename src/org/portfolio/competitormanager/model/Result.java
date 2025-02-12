@@ -29,26 +29,21 @@ public class Result {
         this.averageScore = calculateAverageScore(score);
     }
 
-    public double calculateAverageScore(String scores) {
-        List<String> scoreList = Arrays.asList(scores.split(","));
-        double sum = 0;
-        for (String s : scoreList) {
-            sum += Integer.parseInt(s.trim());
-        }
-        return sum / scoreList.size();
-    }
 
     // Getters and setters methods
 
     public int getResult_id() {
+
         return result_id;
     }
 
     public void setResult_id(int result_id) {
+
         this.result_id = result_id;
     }
 
     public int getUser_id() {
+
         return user_id;
     }
 
@@ -57,18 +52,22 @@ public class Result {
     }
 
     public String getUsername() {
+
         return username;
     }
 
     public void setUsername(String username) {
+
         this.username = username;
     }
 
     public String getScore() {
+
         return score;
     }
 
     public void setScore(String score) {
+
         this.score = score;
     }
 
@@ -79,4 +78,14 @@ public class Result {
     public void setAverageScore(double averageScore) {
         this.averageScore = averageScore;
     }
+
+    public double calculateAverageScore(String scores) {
+        String[] scoreList = scores.split(",");
+        double sum = 0;
+        for (String s : scoreList) {
+            sum += Integer.parseInt(s.trim());
+        }
+        return sum / scoreList.length;
+    }
+
 }

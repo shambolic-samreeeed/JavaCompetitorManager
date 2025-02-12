@@ -12,6 +12,7 @@ import org.portfolio.competitormanager.model.Result;
 
 import javax.swing.*;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +27,8 @@ public class CompetitorLayout extends JFrame {
     private JRadioButton option1, option2, option3, option4;
     private ButtonGroup optionsGroup;
     private JButton submitButton;
+    private JButton leaderboardsButton;
+    private JButton homeButton;
     private JLabel scoreLabel;
 
     private QuestionDao questionDao;
@@ -85,6 +88,15 @@ public class CompetitorLayout extends JFrame {
         // Action Listeners
         startQuizButton.addActionListener(e -> startQuiz());
         submitButton.addActionListener(e -> submitAnswer());
+        leaderboardsButton.addActionListener(e -> showLeaderboards());
+        homeButton.addActionListener(e -> {
+            // Dispose of the current window
+            dispose();
+            // Create and show the HomePage UI
+            new HomePage(username);
+        });
+
+
     }
 
     private void initComponents() {
@@ -155,6 +167,7 @@ public class CompetitorLayout extends JFrame {
         displayQuestion();
     }
 
+
     public double calculateAverageScore(String scores) {
         // Split the scores string by commas
         String[] scoreArray = scores.split(",");
@@ -174,9 +187,40 @@ public class CompetitorLayout extends JFrame {
             }
         }
 
-        // Calculate and return the average score, return 0 if no valid scores are found
-        return (count > 0) ? (double) totalScores / count : 0;
+        // Calculate the average score
+        double averageScore = (count > 0) ? (double) totalScores / count : 0;
+
+        // Format the average score to 2 decimal places
+        DecimalFormat df = new DecimalFormat("#.00");
+        return Double.parseDouble(df.format(averageScore));
     }
+
+    private void showLeaderboards() {
+        // Fetch leaderboard data and display it
+        ResultDao resultDao = new ResultDaoImpl();
+        try {
+            List<Result> results = resultDao.findAll(); // Get leaderboard data
+
+            // Sort the results in descending order based on average score
+            results.sort((r1, r2) -> Double.compare(r2.getAverageScore(), r1.getAverageScore()));
+
+            // Build the leaderboard string
+            StringBuilder leaderboard = new StringBuilder("Leaderboard:\n");
+
+            for (Result result : results) {
+                leaderboard.append(result.getUsername())
+                        .append(" Score: ").append(result.getScore())
+                        .append(" Average: ").append(result.getAverageScore())
+                        .append("\n");
+            }
+
+            // Show the leaderboard
+            JOptionPane.showMessageDialog(this, leaderboard.toString(), "Leaderboard", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(this, "Error loading leaderboard: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 
     private void endQuiz() {
         String difficulty = (String) difficultyComboBox.getSelectedItem();

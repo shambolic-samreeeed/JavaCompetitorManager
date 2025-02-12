@@ -67,17 +67,27 @@ public class HomePage extends JFrame {
         ResultDao resultDao = new ResultDaoImpl();
         try {
             List<Result> results = resultDao.findAll(); // Get leaderboard data
+
+            // Sort the results in descending order based on average score
+            results.sort((r1, r2) -> Double.compare(r2.getAverageScore(), r1.getAverageScore()));
+
+            // Build the leaderboard string
             StringBuilder leaderboard = new StringBuilder("Leaderboard:\n");
 
             for (Result result : results) {
-                leaderboard.append(result.getUsername()).append(" - ").append(result.getScore()).append("\n");
+                leaderboard.append(result.getUsername())
+                        .append(" Score: ").append(result.getScore())
+                        .append(" Average: ").append(result.getAverageScore())
+                        .append("\n");
             }
 
+            // Show the leaderboard
             JOptionPane.showMessageDialog(this, leaderboard.toString(), "Leaderboard", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException | ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(this, "Error loading leaderboard: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     // You can also ensure the form file's initComponents is present
     private void initComponents() {

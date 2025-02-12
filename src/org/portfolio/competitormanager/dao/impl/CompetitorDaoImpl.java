@@ -15,8 +15,8 @@ public class CompetitorDaoImpl implements CompetitorDao {
      * Saves the competitor object to the database
      * @param competitor The competitor object that contains the details that are to be saved
      * @return The number of rows affected by the sql update
-     * @throws SQLException
-     * @throws ClassNotFoundException
+     * @throws SQLException if there are any sql errors
+     * @throws ClassNotFoundException is any class is not found
      */
     @Override
     public int save(Competitor competitor) throws SQLException, ClassNotFoundException {
@@ -34,8 +34,8 @@ public class CompetitorDaoImpl implements CompetitorDao {
      * Retrieves an object from the database with the given username.
      * @param username The username that is to be retrieved.
      * @return Competitor object if it is found
-     * @throws SQLException
-     * @throws ClassNotFoundException
+     * @throws SQLException if there are any sql errors
+     * @throws ClassNotFoundException is any class is not found
      */
     @Override
     public Competitor findByUsername(String username) throws SQLException, ClassNotFoundException {
